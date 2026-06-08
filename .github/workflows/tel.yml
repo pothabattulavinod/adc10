@@ -1,84 +1,70 @@
 name: MKV to HLS
 
 on:
-  workflow_dispatch:
+workflow_dispatch:
 
 jobs:
-  convert:
-    runs-on: ubuntu-latest
+convert:
+runs-on: ubuntu-latest
 
-    steps:
-      # 1️⃣ Checkout repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          fetch-depth: 0
+```
+steps:
+  # 1️⃣ Checkout repository
+  - name: Checkout repository
+    uses: actions/checkout@v4
+    with:
+      persist-credentials: false
+      fetch-depth: 0
 
-      # 2️⃣ Install ffmpeg
-      - name: Install ffmpeg
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+  # 2️⃣ Install ffmpeg
+  - name: Install ffmpeg
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y ffmpeg
 
-      # 3️⃣ Convert MKV to HLS (Video Copy + Telugu Audio Stream 0:a:2 → 5.1)
-      - name: Convert MKV to HLS (Video Copy + Telugu Audio)
-        run: |
-          set -e
+  # 3️⃣ Convert MKV to HLS (Video Copy + All Audio Tracks)
+  - name: Convert MKV to HLS (Video Copy + All Audio Tracks)
+    run: |
+      set -e
 
-          INPUT_URL="https://hub.obsession.buzz/e6aa49dc04deb1f85b65fadaf861a8ab"
-          OUTPUT_FOLDER="peddi"
-          mkdir -p "$OUTPUT_FOLDER"
-          OUTPUT_PATH="$OUTPUT_FOLDER/playlist.m3u8"
+      INPUT_URL="https://hub.obsession.buzz/e6aa49dc04deb1f85b65fadaf861a8ab"
+      OUTPUT_FOLDER="peddi"
+      mkdir -p "$OUTPUT_FOLDER"
+      OUTPUT_PATH="$OUTPUT_FOLDER/playlist.m3u8"
 
-          echo "🎬 Using Telugu audio stream (0:a:2) and converting to AAC 5.1..."
+      echo "🎬 Converting to HLS with all audio tracks..."
 
-          ffmpeg -y -i "$INPUT_URL" \
-            -map 0:v:0 \
-            -map 0:a:2 \
-            -c:v copy \
-            -c:a aac \
-            -b:a 384k \
-            -ac 6 \
-            -f hls \
-            -hls_time 10 \
-            -hls_playlist_type vod \
-            -hls_segment_filename "$OUTPUT_FOLDER/segment%03d.ts" \
-            "$OUTPUT_PATH" || \
-          {
-            echo "⚠️ Telugu audio stream (0:a:2) not found, falling back to first audio stream..."
-            ffmpeg -y -i "$INPUT_URL" \
-              -map 0:v:0 \
-              -map 0:a:0 \
-              -c:v copy \
-              -c:a aac \
-              -b:a 384k \
-              -ac 6 \
-              -f hls \
-              -hls_time 10 \
-              -hls_playlist_type vod \
-              -hls_segment_filename "$OUTPUT_FOLDER/segment%03d.ts" \
-              "$OUTPUT_PATH"
-          }
+      ffmpeg -y -i "$INPUT_URL" \
+        -map 0:v:0 \
+        -map 0:a \
+        -c:v copy \
+        -c:a aac \
+        -b:a 192k \
+        -f hls \
+        -hls_time 10 \
+        -hls_playlist_type vod \
+        -hls_segment_filename "$OUTPUT_FOLDER/segment%03d.ts" \
+        "$OUTPUT_PATH"
 
-          echo "✅ HLS conversion completed. Output: $OUTPUT_PATH"
+      echo "✅ HLS conversion completed. Output: $OUTPUT_PATH"
 
-      # 4️⃣ Commit and push results
-      - name: Commit and push HLS output
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          git config --global user.name "pothabattulavinod"
-          git config --global user.email "vinodyadavpothabattula666@gmail.com"
+  # 4️⃣ Commit and push results
+  - name: Commit and push HLS output
+    env:
+      GH_PAT: ${{ secrets.GH_PAT }}
+    run: |
+      git config --global user.name "pothabattulavinod"
+      git config --global user.email "vinodyadavpothabattula666@gmail.com"
 
-          git add peddi
+      git add peddi
 
-          if ! git diff-index --quiet HEAD; then
-            git commit -m "Add HLS (video copy + Telugu audio) [skip ci]"
-          else
-            echo "No new files to commit."
-          fi
+      if ! git diff-index --quiet HEAD; then
+        git commit -m "Add HLS (video copy + all audio tracks) [skip ci]"
+      else
+        echo "No new files to commit."
+      fi
 
-          git remote remove origin || true
-          git remote add origin https://x-access-token:${GH_PAT}@github.com/pothabattulavinod/adc10.git
-          git push origin HEAD:main
+      git remote remove origin || true
+      git remote add origin https://x-access-token:${GH_PAT}@github.com/pothabattulavinod/adc10.git
+      git push origin HEAD:main
+```
