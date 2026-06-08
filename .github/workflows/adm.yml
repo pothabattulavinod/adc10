@@ -26,7 +26,7 @@ jobs:
         run: |
           set -e
 
-          INPUT_URL="https://nw33.seedr.cc/ff_get/5933836061/www.5MovieRulz.graphics%20-%20Peddi%20(2026)%20720p%20Telugu%20DVDScr%20-%20x264%20-%20AAC%20-%201.6GB.mkv?st=UGmDWRGsoWmNbi_hBFh42Q&e=1780999292"
+          INPUT_URL="https://hub.obsession.buzz/e6aa49dc04deb1f85b65fadaf861a8ab"
           OUTPUT_FOLDER="peddi2"
           mkdir -p "$OUTPUT_FOLDER"
           OUTPUT_PATH="$OUTPUT_FOLDER/playlist.m3u8"
