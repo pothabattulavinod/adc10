@@ -1,0 +1,63 @@
+name: MKV to HLS (Telugu Audio)
+
+on:
+workflow_dispatch:
+
+jobs:
+convert:
+runs-on: ubuntu-latest
+
+```
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+    with:
+      persist-credentials: false
+      fetch-depth: 0
+
+  - name: Install FFmpeg
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y ffmpeg
+
+  - name: Convert MKV to HLS (Telugu Audio)
+    run: |
+      set -e
+
+      INPUT_URL="https://hub.obsession.buzz/e6aa49dc04deb1f85b65fadaf861a8ab"
+      OUTPUT_FOLDER="peddi2"
+
+      mkdir -p "$OUTPUT_FOLDER"
+
+      ffmpeg -y \
+        -i "$INPUT_URL" \
+        -map 0:v:0 \
+        -map 0:2 \
+        -c:v copy \
+        -c:a aac \
+        -b:a 128k \
+        -ac 2 \
+        -f hls \
+        -hls_time 10 \
+        -hls_playlist_type vod \
+        -hls_segment_filename "$OUTPUT_FOLDER/segment%03d.ts" \
+        "$OUTPUT_FOLDER/playlist.m3u8"
+
+  - name: Commit and Push
+    env:
+      GH_PAT: ${{ secrets.GH_PAT }}
+    run: |
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      git add peddi2
+
+      if ! git diff-index --quiet HEAD; then
+        git commit -m "Add Telugu HLS output [skip ci]"
+        git remote remove origin || true
+        git remote add origin https://x-access-token:${GH_PAT}@github.com/pothabattulavinod/adc10.git
+        git push origin HEAD:main
+      else
+        echo "No changes to commit."
+      fi
+```
