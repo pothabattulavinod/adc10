@@ -25,12 +25,10 @@ steps:
       set -e
 
       INPUT_URL="https://hub.obsession.buzz/e6aa49dc04deb1f85b65fadaf861a8ab"
-      OUTPUT_FOLDER="peddi"
+      OUTPUT_FOLDER="peddi2"
       OUTPUT_PATH="$OUTPUT_FOLDER/playlist.m3u8"
 
       mkdir -p "$OUTPUT_FOLDER"
-
-      echo "🎬 Converting MKV to HLS using Telugu audio stream..."
 
       ffmpeg -y \
         -i "$INPUT_URL" \
@@ -38,7 +36,7 @@ steps:
         -map 0:2 \
         -c:v copy \
         -c:a aac \
-        -b:a 384k \
+        -b:a 128k \
         -ac 2 \
         -f hls \
         -hls_time 10 \
@@ -46,24 +44,23 @@ steps:
         -hls_segment_filename "$OUTPUT_FOLDER/segment%03d.ts" \
         "$OUTPUT_PATH"
 
-      echo "✅ HLS conversion completed."
-
-  - name: Commit and push HLS output
+  - name: Commit and Push
     env:
       GH_PAT: ${{ secrets.GH_PAT }}
     run: |
-      git config --global user.name "pothabattulavinod"
-      git config --global user.email "vinodyadavpothabattula666@gmail.com"
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      git add peddi
+      git add peddi2
 
       if ! git diff-index --quiet HEAD; then
         git commit -m "Add Telugu HLS output [skip ci]"
       else
-        echo "No new files to commit."
+        echo "No changes to commit."
       fi
 
       git remote remove origin || true
       git remote add origin https://x-access-token:${GH_PAT}@github.com/pothabattulavinod/adc10.git
+
       git push origin HEAD:main
 ```
