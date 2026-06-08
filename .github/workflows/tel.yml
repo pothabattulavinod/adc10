@@ -1,4 +1,4 @@
-name: MKV to HLS
+name: MKV to HLS (Telugu Audio)
 
 on:
 workflow_dispatch:
@@ -20,12 +20,12 @@ steps:
       sudo apt-get update
       sudo apt-get install -y ffmpeg
 
-  - name: Convert MKV to HLS (Telugu Audio)
+  - name: Convert MKV to HLS
     run: |
       set -e
 
       INPUT_URL="https://hub.obsession.buzz/e6aa49dc04deb1f85b65fadaf861a8ab"
-      OUTPUT_FOLDER="peddi"
+      OUTPUT_FOLDER="peddi2"
       OUTPUT_PATH="$OUTPUT_FOLDER/playlist.m3u8"
 
       mkdir -p "$OUTPUT_FOLDER"
@@ -51,16 +51,14 @@ steps:
       git config --global user.name "github-actions[bot]"
       git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      git add peddi
+      git add peddi2
 
       if ! git diff-index --quiet HEAD; then
         git commit -m "Add Telugu HLS output [skip ci]"
+        git remote remove origin || true
+        git remote add origin https://x-access-token:${GH_PAT}@github.com/pothabattulavinod/adc10.git
+        git push origin HEAD:main
       else
         echo "No changes to commit."
       fi
-
-      git remote remove origin || true
-      git remote add origin https://x-access-token:${GH_PAT}@github.com/pothabattulavinod/adc10.git
-
-      git push origin HEAD:main
 ```
