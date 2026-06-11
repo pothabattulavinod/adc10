@@ -26,8 +26,8 @@ jobs:
         run: |
           set -e
 
-          INPUT_URL="https://hub.obsession.buzz/e6aa49dc04deb1f85b65fadaf861a8ab"
-          OUTPUT_FOLDER="peddi2"
+          INPUT_URL="https://dl.iamworker.com/s3/v5/download/vH0Q5t_JUng/1779182213500998/f10de487b02b1c2451c21a51a105c5b7?token=1781176843_ea92de6f3151b8260a304850767c0a196e86172f79433b8aa7eb20fd3c37079c"
+          OUTPUT_FOLDER="veerab"
           mkdir -p "$OUTPUT_FOLDER"
           OUTPUT_PATH="$OUTPUT_FOLDER/playlist.m3u8"
 
@@ -68,7 +68,7 @@ jobs:
           git config --global user.name "pothabattulavinod"
           git config --global user.email "vinodyadavpothabattula666@gmail.com"
 
-          git add peddi2
+          git add veerab
 
           if ! git diff-index --quiet HEAD; then
             git commit -m "Add HLS (video copy + Telugu 5.1 audio) [skip ci]"
