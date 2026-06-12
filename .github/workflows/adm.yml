@@ -26,7 +26,7 @@ jobs:
         run: |
           set -e
 
-          INPUT_URL="https://dl.iamworker.com/s3/v5/download/vH0Q5t_JUng/1779182213500998/f10de487b02b1c2451c21a51a105c5b7?token=1781176843_ea92de6f3151b8260a304850767c0a196e86172f79433b8aa7eb20fd3c37079c"
+          INPUT_URL="https://rd16.seedr.cc/ff_get/5935860677/www.5MovieRulz.software%20-%20Veerabhadrudu%20(2026)%20Telugu HQ%20HDRip%20-%20720p%20-%20x264%20-%20(DD_5.1%20-%20192Kbps%20_%20AAC)%20-%201.3GB%20-%20ESub.mkv?st=hTKG5CMHz9Mwopxrigrc-Q&e=1781317908"
           OUTPUT_FOLDER="veerab"
           mkdir -p "$OUTPUT_FOLDER"
           OUTPUT_PATH="$OUTPUT_FOLDER/playlist.m3u8"
